@@ -25,7 +25,6 @@
 #define LIBVLC_INPUT_RESOURCE_H 1
 
 #include <vlc_common.h>
-#include <vlc_mouse.h>
 #include "../video_output/vout_internal.h"
 
 /**

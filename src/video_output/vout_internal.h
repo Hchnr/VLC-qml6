@@ -32,6 +32,7 @@
 #include "snapshot.h"
 #include "statistic.h"
 #include "chrono.h"
+#include "../clock/clock.h"
 
 /* It should be high enough to absorbe jitter due to difficult picture(s)
  * to decode but not too high as memory is not that cheap.
@@ -46,6 +47,7 @@
  */
 typedef struct {
     vout_thread_t        *vout;
+    vlc_clock_t          *clock;
     const video_format_t *fmt;
     unsigned             dpb_size;
     vlc_mouse_event      mouse_event;
@@ -61,6 +63,8 @@ struct vout_thread_sys_t
 
     /* Input thread for spu attachments */
     input_thread_t    *input;
+    vlc_clock_t     *clock;
+    float           rate;
 
     /* */
     video_format_t  original;   /* Original format ie coming from the decoder */
@@ -230,6 +234,12 @@ void spu_SetHighlight(spu_t *, const vlc_spu_highlight_t*);
  * It is thread safe
  */
 void vout_ChangePause( vout_thread_t *, bool b_paused, vlc_tick_t i_date );
+
+/**
+ * This function will change the rate of the vout
+ * It is thread safe
+ */
+void vout_ChangeRate( vout_thread_t *, float rate );
 
 /**
  * Updates the pointing device state.
