@@ -614,6 +614,7 @@ static subpicture_t *spu_new_buffer( decoder_t *p_dec,
         if( p_owner->p_vout )
         {
             vlc_mutex_lock( &p_owner->lock );
+            vout_SetSubpictureClock( p_owner->p_vout, NULL );
             vlc_object_release( p_owner->p_vout );
             p_owner->p_vout = NULL;
             vlc_mutex_unlock( &p_owner->lock );
@@ -628,9 +629,14 @@ static subpicture_t *spu_new_buffer( decoder_t *p_dec,
 
         vlc_mutex_lock( &p_owner->lock );
         if( p_owner->p_vout )
+        {
+            vout_SetSubpictureClock( p_owner->p_vout, NULL );
             vlc_object_release( p_owner->p_vout );
+        }
         p_owner->p_vout = p_vout;
         vlc_mutex_unlock( &p_owner->lock );
+
+        vout_SetSubpictureClock( p_vout, p_owner->p_clock );
     }
     else
         vlc_object_release( p_vout );
@@ -1827,6 +1833,7 @@ static void DeleteDecoder( decoder_t * p_dec )
             {
                 vout_FlushSubpictureChannel( p_owner->p_vout,
                                              p_owner->i_spu_channel );
+                vout_SetSubpictureClock( p_owner->p_vout, NULL );
                 vlc_object_release( p_owner->p_vout );
             }
             break;

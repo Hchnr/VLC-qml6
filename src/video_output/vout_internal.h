@@ -226,6 +226,8 @@ void vout_ManageWrapper(vout_thread_t *);
 /* */
 int spu_ProcessMouse(spu_t *, const vlc_mouse_t *, const video_format_t *);
 void spu_Attach( spu_t *, input_thread_t *input, bool );
+void vout_SetSubpictureClock( vout_thread_t *vout, vlc_clock_t *clock ); /* FIXME */
+void spu_SetClock( spu_t *, vlc_clock_t * );
 void spu_ChangeMargin(spu_t *, int);
 void spu_SetHighlight(spu_t *, const vlc_spu_highlight_t*);
 
