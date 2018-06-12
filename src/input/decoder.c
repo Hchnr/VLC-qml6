@@ -1547,7 +1547,7 @@ static void *DecoderThread( void *p_data )
 
             vlc_fifo_Unlock( p_owner->p_fifo );
 
-            if( OutputChangeRate( p_dec, request_rate ) == VLC_SUCCESS )
+            if( OutputChangeRate( p_dec, 1.f / request_rate ) == VLC_SUCCESS )
                 rate = request_rate;
 
             vlc_restorecancel( canc );
