@@ -1442,6 +1442,7 @@ static void OutputChangeRate( decoder_t *p_dec, float rate )
 {
     struct decoder_owner *p_owner = dec_get_owner( p_dec );
 
+    rate = 1.f / rate;
     msg_Dbg( p_dec, "changing rate: %f", rate );
     switch( p_dec->fmt_out.i_cat )
     {
