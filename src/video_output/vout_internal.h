@@ -65,6 +65,7 @@ struct vout_thread_sys_t
     input_thread_t    *input;
     vlc_clock_t     *clock;
     float           rate;
+    vlc_tick_t      delay;
 
     /* */
     video_format_t  original;   /* Original format ie coming from the decoder */
@@ -228,6 +229,7 @@ int spu_ProcessMouse(spu_t *, const vlc_mouse_t *, const video_format_t *);
 void spu_Attach( spu_t *, input_thread_t *input, bool );
 void vout_SetSubpictureClock( vout_thread_t *vout, vlc_clock_t *clock ); /* FIXME */
 void spu_SetClock( spu_t *, vlc_clock_t * );
+void spu_SetClockDelay(spu_t *spu, vlc_tick_t delay);
 void spu_ChangeMargin(spu_t *, int);
 void spu_SetHighlight(spu_t *, const vlc_spu_highlight_t*);
 
@@ -242,6 +244,19 @@ void vout_ChangePause( vout_thread_t *, bool b_paused, vlc_tick_t i_date );
  * It is thread safe
  */
 void vout_ChangeRate( vout_thread_t *, float rate );
+
+/**
+ * This function will change the delay of the vout
+ * It is thread safe
+ */
+void vout_ChangeDelay( vout_thread_t *, vlc_tick_t delay );
+
+/**
+ * This function will change the delay of the spu channel
+ * It is thread safe
+ */
+void vout_ChangeSpuDelay( vout_thread_t *, int spu_channel, vlc_tick_t delay );
+
 
 /**
  * Updates the pointing device state.
