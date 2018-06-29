@@ -297,17 +297,36 @@ static void MouseEvent( const vlc_mouse_t *newmouse, void *user_data )
  *****************************************************************************/
 static vout_thread_t *aout_request_vout( void *p_private,
                                          vout_thread_t *p_vout,
+                                         vlc_clock_t **outclock,
                                          const video_format_t *p_fmt, bool b_recyle )
 {
     decoder_t *p_dec = p_private;
     struct decoder_owner *p_owner = dec_get_owner( p_dec );
     input_thread_t *p_input = p_owner->p_input;
+    vlc_clock_t *clock = NULL, *freeclock = NULL;
 
+    if( outclock )
+    {
+        if( !*outclock )
+        {
+            clock = *outclock = vlc_clock_NewSlaveFromClock( p_owner->p_clock );
+            if( !clock )
+                return NULL;
+        }
+        else
+            freeclock = *outclock;
+    }
     p_vout = input_resource_RequestVout( p_owner->p_resource,
-        &(vout_configuration_t){ .vout = p_vout, .clock = NULL, .fmt = p_fmt,
+        &(vout_configuration_t){ .vout = p_vout, .clock = clock, .fmt = p_fmt,
                                  .dpb_size = 1 }, b_recyle );
     if( p_input != NULL )
         input_SendEventVout( p_input );
+
+    if( !p_vout && clock )
+        vlc_clock_Delete( clock );
+
+    if( freeclock)
+        vlc_clock_Delete( freeclock );
 
     return p_vout;
 }

@@ -397,7 +397,8 @@ vout_thread_t *aout_filter_RequestVout (filter_t *filter, vout_thread_t *vout,
     bool recycle = false;
     free (visual);
 
-    return req->pf_request_vout (req->p_private, vout, fmt, recycle);
+    return req->pf_request_vout (req->p_private, vout, &filter->owner.audio,
+                                 fmt, recycle);
 }
 
 static int AppendFilter(vlc_object_t *obj, const char *type, const char *name,

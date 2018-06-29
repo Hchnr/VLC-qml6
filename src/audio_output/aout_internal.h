@@ -37,10 +37,12 @@ enum {
     AOUT_RESAMPLING_DOWN
 };
 
+typedef struct vlc_clock_t vlc_clock_t;
 struct aout_request_vout
 {
     struct vout_thread_t  *(*pf_request_vout)( void *, struct vout_thread_t *,
-                                               const video_format_t *, bool );
+                                               vlc_clock_t **,
+                                               const video_format_t *, bool);
     void *p_private;
 };
 
