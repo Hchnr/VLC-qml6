@@ -69,6 +69,9 @@ vlc_clock_t * vlc_clock_NewMaster(vlc_clock_main_t * main);
  */
 vlc_clock_t * vlc_clock_NewSlave(vlc_clock_main_t * main);
 
+
+vlc_clock_t * vlc_clock_NewSlaveFromClock(vlc_clock_t * clock);
+
 /**
  * This function free the resources allocated by vlc_clock_New
  */

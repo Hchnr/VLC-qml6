@@ -54,6 +54,7 @@ typedef struct filter_owner_t
     {
         const struct filter_video_callbacks *video;
         const struct filter_subpicture_callbacks *sub;
+        void *audio;
     };
     void *sys;
 } filter_owner_t;

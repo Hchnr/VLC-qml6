@@ -552,6 +552,11 @@ vlc_clock_t * vlc_clock_NewSlave(vlc_clock_main_t * main_clock)
     return clk;
 }
 
+vlc_clock_t * vlc_clock_NewSlaveFromClock(vlc_clock_t * clock)
+{
+    return vlc_clock_NewSlave(clock->owner);
+}
+
 void vlc_clock_SetMaster(vlc_clock_main_t * main_clock, vlc_clock_t * clk)
 {
     vlc_mutex_lock(&main_clock->lock);
