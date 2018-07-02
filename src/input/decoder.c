@@ -1477,29 +1477,44 @@ static int OutputChangeRate( decoder_t *p_dec, float rate )
     return ret;
 }
 
-static void OutputChangeDelay( decoder_t *p_dec, vlc_tick_t delay )
+static int OutputChangeDelay( decoder_t *p_dec, vlc_tick_t delay )
 {
     struct decoder_owner *p_owner = dec_get_owner( p_dec );
+    int ret = VLC_EGENERIC;
 
     msg_Dbg( p_dec, "changing delay: %"PRId64, delay );
+
+    vlc_mutex_lock( &p_owner->lock );
     switch( p_dec->fmt_out.i_cat )
     {
         case VIDEO_ES:
             if( p_owner->p_vout != NULL )
+            {
                 vout_ChangeDelay( p_owner->p_vout, delay );
+                ret = VLC_SUCCESS;
+            }
             break;
         case AUDIO_ES:
             if( p_owner->p_aout != NULL )
+            {
                 aout_DecChangeDelay( p_owner->p_aout, delay );
+                ret = VLC_SUCCESS;
+            }
             break;
         case SPU_ES:
             if( p_owner->p_vout != NULL )
+            {
                 vout_ChangeSpuDelay( p_owner->p_vout, p_owner->i_spu_channel,
                                      delay );
+                ret = VLC_SUCCESS;
+            }
             break;
         default:
             vlc_assert_unreachable();
     }
+    vlc_mutex_unlock( &p_owner->lock );
+
+    return ret;
 }
 
 /**
@@ -1577,10 +1592,11 @@ static void *DecoderThread( void *p_data )
         {
             int canc = vlc_savecancel();
 
-            delay = p_owner->delay;
+            vlc_tick_t request_delay = p_owner->delay;
             vlc_fifo_Unlock( p_owner->p_fifo );
 
-            OutputChangeDelay( p_dec, delay );
+            if( OutputChangeDelay( p_dec, request_delay ) == VLC_SUCCESS )
+                delay = request_delay;
 
             vlc_restorecancel( canc );
             vlc_fifo_Lock( p_owner->p_fifo );
