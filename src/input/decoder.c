@@ -1491,6 +1491,8 @@ static void OutputChangePause( decoder_t *p_dec, bool paused, vlc_tick_t date )
     struct decoder_owner *p_owner = dec_get_owner( p_dec );
 
     msg_Dbg( p_dec, "toggling %s", paused ? "resume" : "pause" );
+
+    vlc_mutex_lock( &p_owner->lock );
     switch( p_dec->fmt_out.i_cat )
     {
         case VIDEO_ES:
@@ -1506,6 +1508,7 @@ static void OutputChangePause( decoder_t *p_dec, bool paused, vlc_tick_t date )
         default:
             vlc_assert_unreachable();
     }
+    vlc_mutex_unlock( &p_owner->lock );
 }
 
 static void OutputChangeRate( decoder_t *p_dec, float rate )
@@ -1513,6 +1516,8 @@ static void OutputChangeRate( decoder_t *p_dec, float rate )
     struct decoder_owner *p_owner = dec_get_owner( p_dec );
 
     msg_Dbg( p_dec, "changing rate: %f", rate );
+
+    vlc_mutex_lock( &p_owner->lock );
     switch( p_dec->fmt_out.i_cat )
     {
         case VIDEO_ES:
@@ -1526,6 +1531,7 @@ static void OutputChangeRate( decoder_t *p_dec, float rate )
         default:
             vlc_assert_unreachable();
     }
+    vlc_mutex_unlock( &p_owner->lock );
 }
 
 /**
