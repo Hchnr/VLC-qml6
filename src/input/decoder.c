@@ -1553,6 +1553,7 @@ static void *DecoderThread( void *p_data )
         {
             rate = 1.f;
             paused = false;
+            delay = 0;
             p_owner->reset_out_state = false;
         }
 
